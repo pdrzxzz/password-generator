@@ -1,0 +1,69 @@
+# importing modules
+import random, string
+
+# extracting data from string object
+letters = string.ascii_letters
+numbers = string.digits
+ponctuation = string.punctuation
+
+# defining get_checking functions
+def get_checked_username():
+    while True:
+        username = input('Enter your username: ')
+        if len(username) < 6:
+            print('Your username must have at least 6 digits')
+        elif username.isdigit():
+            print('Your username cant have only numbers')
+        else:
+            return username
+
+def get_checked_birth_year():
+    while True:
+        birth_year = input('Please, enter your birthday year: ')
+        if len(birth_year) != 4 or not birth_year.isdigit():
+            print('Your birth year must have 4 digits (ex: 1992, 2005)')
+        elif not 1900 < int(birth_year) < 2024:
+            print('Please enter a valid birth year.')
+        else:
+            return birth_year
+
+# defining generating functions
+def generate_weak_password(username, birth_y):
+    new_password = []
+    new_password.extend([username, birth_y, random.choice(numbers) + random.choice(numbers)])
+    random.shuffle(new_password)
+    return ''.join(new_password)
+
+def generate_medium_password(username):
+    new_password = []
+    i = random.randint(1, 2)
+    new_password.extend([username, i*random.choice(letters), random.choice(letters), i*random.choice(numbers), random.choice(numbers) ])
+    random.shuffle(new_password)
+    return ''.join(new_password)
+
+def generate_strong_password(username):
+    all_char = letters + numbers + ponctuation
+    new_password = ''
+    i = random.randint(12, 20)
+    for k in range(0, i):
+        new_password += random.choice(all_char)
+    return new_password
+
+# getting data
+username = get_checked_username()  
+birth_y = get_checked_birth_year()
+
+# asking user the strength
+password_strength = input('How strong you want your password to be?\n-weak\n-medium\n-strong\n->')
+
+# analyzing user choice and generating password
+match password_strength:
+    case 'weak':
+        password = generate_weak_password(username, birth_y)
+    case 'medium':
+        password = generate_medium_password(username)
+    case 'strong':
+        password = generate_strong_password(username)
+
+# returning password to user
+print(f'Your password: {password}')
